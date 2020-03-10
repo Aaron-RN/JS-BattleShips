@@ -61,8 +61,8 @@ class GameView {
       row.forEach((cell, j) => {
         const cellNode = document.createElement('div');
         cellNode.classList.add('cell');
-        cellNode.setAttribute('data-x', i);
-        cellNode.setAttribute('data-y', j);
+        cellNode.dataset.x = i;
+        cellNode.dataset.y = j;
         if (!enemy && board[i][j].shipId) {
           cellNode.classList.add('ship');
         }

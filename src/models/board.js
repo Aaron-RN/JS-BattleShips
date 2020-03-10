@@ -73,10 +73,10 @@ class Board {
     for (let i = startX; i <= finishX; i += 1) {
       for (let j = startY; j <= finishY; j += 1) {
         this.board[i][j].shipId = ship.id;
-        this.ships.push(ship);
       }
     }
 
+    this.ships.push(ship);
     return true;
   }
 
