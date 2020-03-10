@@ -6,10 +6,6 @@ html { box-sizing: border-box; }
   box-sizing: border-box;
 }
 
-* {
-  transition-duration: 0.25s;
-}
-
 body {
   font-family: Helvetica, Arial, san-serif;
 }
@@ -47,6 +43,7 @@ body {
 }
 
 #PlayerBoard, #EnemyBoard {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   max-width: 500px;
@@ -55,6 +52,25 @@ body {
   background-repeat: repeat;
   background-color:rgb(50,90,180);
   animation: backgroundScroll 80s linear infinite;
+}
+
+.BoardMessage {
+  background: rgba(0, 0, 0, 0.5);
+  font-size: 30px;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: white;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.PausedBoard .BoardMessage {
+  display: flex;
 }
 
 .cell {

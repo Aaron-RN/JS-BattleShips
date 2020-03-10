@@ -1,4 +1,6 @@
 import Game from '../models/game';
+import Hit from '../sounds/hit.flac';
+import Miss from '../sounds/miss.mp3';
 
 class GameView {
   constructor(size = 10) {
@@ -14,17 +16,23 @@ class GameView {
 
   run() {
     GameView.renderBoard(this.playerBoardNode, this.game.player2.targetBoard.board);
+    this.playerBoardNode.classList.toggle('PausedBoard');
+
     GameView.renderBoard(this.enemyBoardNode, this.game.player1.targetBoard.board, true);
 
     this.enemyBoardNode.childNodes.forEach(cell => {
-      cell.addEventListener('click', () => {
-        if (!this.game.over) {
+      cell.addEventListener('click', async (e) => {
+        const board = e.target.parentNode;
+        if (!this.game.over && !board.classList.contains("PausedBoard")) {
           const playerResult = this.playerPlay(cell);
           if (playerResult === 'missed') {
             let enemyResult = null;
+            this.toggleBoards();
             do {
+              await new Promise(r => setTimeout(r, 1500));
               enemyResult = this.enemyPlay();
             } while (enemyResult === 'hit' && !this.game.over);
+            this.toggleBoards();
           }
 
           if (this.game.over) {
@@ -40,7 +48,10 @@ class GameView {
 
   playerPlay(cell) {
     const result = this.game.play(cell.dataset);
-    if (result) { cell.classList.add(result); }
+    if (result) {
+      cell.classList.add(result);
+      this.playSound(result);
+    }
 
     return result;
   }
@@ -52,8 +63,19 @@ class GameView {
     const cell = this.playerBoardNode
       .querySelector(`[data-x="${coords.x}"][data-y="${coords.y}"]`);
     cell.classList.add(result);
+    this.playSound(result);
 
     return result;
+  }
+
+  playSound(result) {
+    const audio = new Audio(result === 'hit' ? Hit : Miss);
+    audio.play();
+  }
+
+  toggleBoards() {
+    this.playerBoardNode.classList.toggle('PausedBoard');
+    this.enemyBoardNode.classList.toggle('PausedBoard');
   }
 
   static renderBoard(boardNode, board, enemy = false) {
@@ -69,6 +91,10 @@ class GameView {
         boardNode.appendChild(cellNode);
       });
     });
+    const boardMessage = document.createElement('div');
+    boardMessage.className = "BoardMessage";
+    boardMessage.innerHTML = enemy ? "The enemy is playing..." : "Your turn";
+    boardNode.appendChild(boardMessage);
   }
 
   initHeader() {

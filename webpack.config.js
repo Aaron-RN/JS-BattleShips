@@ -21,6 +21,12 @@ module.exports = {
           'file-loader',
         ],
       },
+      {
+        test: /\.(ogg|mp3|wav|mpe?g|flac)$/i,
+        use: [
+          'file-loader',
+        ],
+      },
     ],
   },
 };
