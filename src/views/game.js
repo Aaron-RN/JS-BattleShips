@@ -11,6 +11,8 @@ class GameView {
     this.playerBoardNode = document.getElementById('PlayerBoard');
     this.enemyBoardNode = document.getElementById('EnemyBoard');
     this.enemyMoves = [...Array(this.size ** 2).keys()];
+    this.hit = new Audio(Hit);
+    this.miss = new Audio(Miss);
     this.initHeader();
   }
 
@@ -23,7 +25,7 @@ class GameView {
     this.enemyBoardNode.childNodes.forEach(cell => {
       cell.addEventListener('click', async (e) => {
         const board = e.target.parentNode;
-        if (!this.game.over && !board.classList.contains("PausedBoard")) {
+        if (!this.game.over && !board.classList.contains('PausedBoard')) {
           const playerResult = this.playerPlay(cell);
           if (playerResult === 'missed') {
             let enemyResult = null;
@@ -69,8 +71,10 @@ class GameView {
   }
 
   playSound(result) {
-    const audio = new Audio(result === 'hit' ? Hit : Miss);
-    audio.play();
+    const sound = result === 'hit' ? this.hit : this.miss;
+    sound.pause();
+    sound.currentTime = 0;
+    sound.play();
   }
 
   toggleBoards() {
@@ -92,8 +96,8 @@ class GameView {
       });
     });
     const boardMessage = document.createElement('div');
-    boardMessage.className = "BoardMessage";
-    boardMessage.innerHTML = enemy ? "The enemy is playing..." : "Your turn";
+    boardMessage.className = 'BoardMessage';
+    boardMessage.innerHTML = enemy ? 'The enemy is playing...' : 'Your turn';
     boardNode.appendChild(boardMessage);
   }
 
